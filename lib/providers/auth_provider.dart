@@ -17,12 +17,14 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void login() {
+  void login() async {
+    await _sharedPreferences.setBool('isAuthenticated', true);
     _isAuthenticated = true;
     notifyListeners();
   }
 
-  void logout() {
+  void logout() async {
+    await _sharedPreferences.setBool('isAuthenticated', false);
     _isAuthenticated = false;
     notifyListeners();
   }
