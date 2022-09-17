@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_state_mangement/home_provider.dart';
+import 'package:flutter_state_mangement/providers/app_config_provider.dart';
+import 'package:flutter_state_mangement/screens/account_screen.dart';
+import 'package:flutter_state_mangement/screens/error_screen.dart';
+import 'package:flutter_state_mangement/screens/home_screen.dart';
+import 'package:flutter_state_mangement/screens/login_screen.dart';
+import 'package:flutter_state_mangement/screens/main_screen.dart';
+import 'package:flutter_state_mangement/screens/splash_screen.dart';
+import 'package:provider/provider.dart';
 
-import 'home_page.dart';
+import 'providers/auth_provider.dart';
 
-void main() async {
+void main() {
   runApp(MyApp());
 }
 
@@ -12,19 +19,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: HomeProvider(
-        name: "acess token dkjasldjkflsakdjflsjk",
-        homeDetailPageColor: Colors.red,
-        homeService: HomeService(),
-        child: HomePage(
-          name: "Home Provider from MyApp",
-        ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AppConfigProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: true,
+        //TODO:: method 1
+        onGenerateRoute: (settings) {
+          if (settings.name == "/") {
+            return MaterialPageRoute(builder: (context) => SplashScreen());
+          } else if (settings.name == '/main') {
+            return MaterialPageRoute(builder: (context) => MainScreen());
+          } else if (settings.name == '/home') {
+            return MaterialPageRoute(builder: (context) => HomeScreen());
+          } else if (settings.name == "/account") {
+            return MaterialPageRoute(
+              builder: (context) => Provider(
+                create: (_) => SimpleMode(),
+                child: AccountScreen(),
+              ),
+            );
+          } else if (settings.name == "/login") {
+            return MaterialPageRoute(builder: (context) => LoginScreen());
+          }
+          return MaterialPageRoute(builder: (context) => ErrorScreen());
+        },
+        // TODO:: method 2
+        // initialRoute: "/",
+        // routes: {
+        //   "/": (context) => MainScreen(),
+        //   "/home": (context) => HomeScreen(),
+        //   "/account": (context) => AccountScreen(),
+        // },
       ),
     );
   }
 }
+// Navigator.of(context).pushNamed("/home");
