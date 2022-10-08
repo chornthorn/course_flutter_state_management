@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_state_mangement/providers/auth_provider.dart';
+import 'package:flutter_state_mangement/providers/post_provider.dart';
+import 'package:flutter_state_mangement/services/post_service.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/app_config_provider.dart';
@@ -42,6 +44,14 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text('Main Screen'),
         actions: [
+
+          // get post list
+          IconButton(
+            onPressed: () {
+              Provider.of<PostProvider>(context, listen: false).getPosts();
+            },
+            icon: Icon(Icons.list),
+          ),
           // logout button
           IconButton(
             onPressed: () {
@@ -51,32 +61,60 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      body: _currentIndex == 0 ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/home");
-              },
-              // child: Text(context.read<AppConfigProvider>().appName),
-              // child: Text(Provider.of<AppConfigProvider>(context).appName),
-              child: Consumer<AppConfigProvider>(
-                builder: (context, appConfig, child) {
-                  return Text(appConfig.appName);
+      // body: _currentIndex == 0 ? Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           Navigator.of(context).pushNamed("/home");
+      //         },
+      //         // child: Text(context.read<AppConfigProvider>().appName),
+      //         // child: Text(Provider.of<AppConfigProvider>(context).appName),
+      //         child: Consumer<AppConfigProvider>(
+      //           builder: (context, appConfig, child) {
+      //             return Text(appConfig.appName);
+      //           },
+      //         ),
+      //       ),
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           Navigator.of(context).pushNamed("/account");
+      //         },
+      //         child: Text('Account'),
+      //       ),
+      //     ],
+      //   ),
+      // ) : Center(
+      //   child: Text('Account'),
+      // ),
+
+
+      body: Container(
+        child: Consumer(
+          builder: (context, PostProvider postProvider, child) {
+            if (postProvider.isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (postProvider.errorMessage.isNotEmpty) {
+              return Center(
+                child: Text(postProvider.errorMessage),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: postProvider.posts.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Text(postProvider.posts[index].id.toString()),
+                    title: Text(postProvider.posts[index].title),
+                    subtitle: Text(postProvider.posts[index].body),
+                  );
                 },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/account");
-              },
-              child: Text('Account'),
-            ),
-          ],
+              );
+            }
+          },
         ),
-      ) : Center(
-        child: Text('Account'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

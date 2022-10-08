@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_state_mangement/providers/app_config_provider.dart';
+import 'package:flutter_state_mangement/providers/post_provider.dart';
 import 'package:flutter_state_mangement/screens/account_screen.dart';
 import 'package:flutter_state_mangement/screens/error_screen.dart';
 import 'package:flutter_state_mangement/screens/home_screen.dart';
@@ -21,8 +22,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()), // instance of AuthProvider
         ChangeNotifierProvider(create: (_) => AppConfigProvider()),
+        ChangeNotifierProvider(create: (_) => PostProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: true,

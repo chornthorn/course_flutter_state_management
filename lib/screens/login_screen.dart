@@ -24,8 +24,18 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_authProvider.isAuthenticated) {
       Navigator.pushReplacementNamed(context, "/main");
     } else {
-      Navigator.pushReplacementNamed(context, "/login");
+      _showLoginFailureAlert();
     }
+  }
+
+  // login failure alert snake bar
+  void _showLoginFailureAlert() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Login Failure'),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -40,13 +50,57 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text('Login Screen'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Provider.of<AuthProvider>(context,listen: false).login();
-          },
-          child: Text('Login'),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Username',
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Provider.of<AuthProvider>(context,listen: false).login();
+                  },
+                  child: Text('Login'),
+                ),
+              ),
+              SizedBox(width: 16),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Provider.of<AuthProvider>(context,listen: false).loginWithFailure();
+                  },
+                  child: Text('Login with Failure'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

@@ -15,9 +15,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _authProvider = context.read<AuthProvider>();
-    _authProvider.init();
+    _authProvider = context.read<AuthProvider>(); // get instance of AuthProvider
     _authProvider.addListener(_authChanged);
+    _authProvider.init();
     print('SplashScreen: ${_authProvider.isAuthenticated}');
   }
 

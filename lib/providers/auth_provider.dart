@@ -23,6 +23,11 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void  loginWithFailure() async {
+    _isAuthenticated = false;
+    notifyListeners();
+  }
+
   void logout() async {
     await _sharedPreferences.setBool('isAuthenticated', false);
     _isAuthenticated = false;
