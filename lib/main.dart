@@ -10,6 +10,7 @@ import 'package:flutter_state_mangement/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
+import 'screens/post_detail_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         //TODO:: method 1
         onGenerateRoute: (settings) {
+          var args = settings.arguments;
           if (settings.name == "/") {
             return MaterialPageRoute(builder: (context) => SplashScreen());
           } else if (settings.name == '/main') {
@@ -45,16 +47,12 @@ class MyApp extends StatelessWidget {
             );
           } else if (settings.name == "/login") {
             return MaterialPageRoute(builder: (context) => LoginScreen());
+          } else if (settings.name == '/post-detail') {
+            args as int;
+            return MaterialPageRoute(builder: (context) => PostDetailPage(postId: args));
           }
           return MaterialPageRoute(builder: (context) => ErrorScreen());
         },
-        // TODO:: method 2
-        // initialRoute: "/",
-        // routes: {
-        //   "/": (context) => MainScreen(),
-        //   "/home": (context) => HomeScreen(),
-        //   "/account": (context) => AccountScreen(),
-        // },
       ),
     );
   }

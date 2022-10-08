@@ -21,4 +21,19 @@ class PostService {
       throw Exception(e.toString());
     }
   }
+
+  Future<PostResModel> getPostDetail(int postId) async {
+    try {
+      Response response = await http.get(Uri.parse('$_url/$postId'));
+
+      if (response.statusCode != 200) {
+        throw Exception('error getting posts');
+      }
+
+      final posts = jsonDecode(response.body);
+      return PostResModel.fromJson(posts);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }
